@@ -85,6 +85,9 @@ public class Main extends Application {
     ImageView Sniper = new ImageView("/sample/image/STower.png");
     ImageView IVTower = new ImageView("/sample/image/launcher.png");
 
+    ImageView MachineC = new ImageView("/sample/image/MGTowerC.png");
+    ImageView SniperC = new ImageView("/sample/image/STowerC.png");
+    ImageView IVTowerC = new ImageView("/sample/image/lanncherC.png");
     //ImageEnemy
     Image SEImage;
     Image TEImage;
@@ -96,7 +99,7 @@ public class Main extends Application {
 
         //Media menuTheme = new Media(getClass().getResource("/sample/LaLung.wav").toString());
         //MediaPlayer mplayer = new MediaPlayer(menuTheme);
-       // mplayer.setVolume(0.7);
+        // mplayer.setVolume(0.7);
         //mplayer.setAutoPlay(true);
 
         num.add(3);
@@ -113,19 +116,19 @@ public class Main extends Application {
         root.getChildren().add(ViewMap1Sound2);
         PlayMap1Sound2.setCycleCount(1);
         PlayMap1Sound2.play();*/
-        Machine.setX(Config.WIDTH - 100);
-        Machine.setY(100);
-        Sniper.setX(Config.WIDTH - 100);
-        Sniper.setY(200);
-        IVTower.setX(Config.WIDTH - 100);
-        IVTower.setY(0);
+        MachineC.setX(Config.WIDTH - 100);
+        MachineC.setY(100);
+        SniperC.setX(Config.WIDTH - 100);
+        SniperC.setY(200);
+        IVTowerC.setX(Config.WIDTH - 100);
+        IVTowerC.setY(0);
         lifeIV.setX(Config.WIDTH - 100);
         lifeIV.setY(300);
         coinIV.setX(Config.WIDTH - 100);
         coinIV.setY(400);
         //pauseIV.setX(Config.WIDTH - 100);
-       // pauseIV.setY(600);
-        root.getChildren().addAll(IVTower, Machine, Sniper, lifeIV, coinIV);
+        // pauseIV.setY(600);
+        root.getChildren().addAll(IVTowerC, MachineC, SniperC, lifeIV, coinIV);
         // create layers
         playfieldLayer = new Pane();
         //lifeRemain = new Pane();
@@ -136,21 +139,6 @@ public class Main extends Application {
         root.getChildren().add( playfieldLayer);
 
         scene = new Scene( root, Config.WIDTH, Config.HEIGHT);
-        /*playfieldLayer.addEventFilter(MouseEvent.MOUSE_MOVED, e->{
-            if(e.getY()<=300 && e.getY() > 200 && e.getX() > Config.WIDTH){
-                scene.setRoot();
-            }else if(e.getY() > 100 && e.getY()<=200 && money >= 10){
-                stt = 2;
-                scene.setCursor(new ImageCursor(IVMachine));
-                clicked = true;
-                moneyPay=10;
-            }else if(e.getY() <= 100 && money >=5){
-                stt = 1;
-                scene.setCursor(new ImageCursor(playerImage));
-                clicked = true;
-                moneyPay=5;
-            }
-        });*/
 
         playfieldLayer.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             int x = (int) e.getX()/100*100+50;
@@ -174,19 +162,24 @@ public class Main extends Application {
                 }
             }
 
-            /*if(e.getX() >= Config.WIDTH - 100 && clicked) {
-                scene.setCursor(null);
-                clicked = false;
-                moneyPay = 0;
-            }*/
+            if(gameField.getMap(e.getX()/100, e.getY()/100) && e.getX() <= Config.WIDTH - 100 && !clicked) {
+                for(Tower i : towers){
+                    if(i.getX() + 100 > e.getX() && i.getX() < e.getX() && i.getY() + 100 > e.getY() && i.getY() < e.getY()){
+                        money += (int) i.cost/2;
+                        gameField.setMap(e.getX()/100, e.getY()/100, false);
+                        i.removeFromLayer();
+                        towers.remove(i);
+                    }
+                }
+            }
 
-            if(!new GameField().getMap(e.getX()/100, e.getY()/100) && e.getX() <= Config.WIDTH - 100 && clicked) {
+            if(!gameField.getMap(e.getX()/100, e.getY()/100) && e.getX() <= Config.WIDTH - 100 && clicked) {
                 scene.setCursor(null);
                 createTower((double) x, (double) y, stt);
                 clicked = false;
                 money -= moneyPay;
                 moneyPay = 0;
-                gameField.setMap(e.getX()/100, e.getY()/100);
+                gameField.setMap(e.getX()/100, e.getY()/100, true);
             }
         });
 
@@ -296,7 +289,7 @@ public class Main extends Application {
 
         double x = Config.WIDTH - 75;
         double y = 315;
-        ((Node) lifeText).relocate(x, y);
+        ((Node) lifeText).relocate(x - 5, y);
         ((Node) Money).relocate(x, y + 100);
         ((Node) waveText).relocate(x, y + 200);
 
@@ -307,11 +300,11 @@ public class Main extends Application {
         gameOver.setBoundsType(TextBoundsType.VISUAL);
 
 
-            gameOver.setFont(Font.font(null,FontWeight.BOLD, 100));
-            gameOver.setStroke(Color.RED);
-            gameOver.setFill(Color.RED);
-            playfieldLayer.getChildren().add((Node) gameOver);
-            ((Node) gameOver).relocate(400,315);
+        gameOver.setFont(Font.font(null,FontWeight.BOLD, 100));
+        gameOver.setStroke(Color.RED);
+        gameOver.setFill(Color.RED);
+        playfieldLayer.getChildren().add((Node) gameOver);
+        ((Node) gameOver).relocate(400,315);
 
     }
     private void createTowers() {
@@ -360,15 +353,15 @@ public class Main extends Application {
             System.out.println(numOfEnemy);
             return;
         }
-            // image
-            Image image = enemyImage;
-            // random speed
-            //double speed = rnd.nextDouble() * 1.0 + 2.0;
-            // x position range: enemy is always fully inside the screen, no part of it is outside
-            // y position: right on top of the view, so that it becomes visible with the next game iteration
-            double x = 0;
-            double y = 300;
-            int j = rnd.nextInt(80) + 1;
+        // image
+        Image image = enemyImage;
+        // random speed
+        //double speed = rnd.nextDouble() * 1.0 + 2.0;
+        // x position range: enemy is always fully inside the screen, no part of it is outside
+        // y position: right on top of the view, so that it becomes visible with the next game iteration
+        double x = 0;
+        double y = 300;
+        int j = rnd.nextInt(80) + 1;
         if(j % 32 == 0){
             image = BEImage;
             Boss enemy = new Boss( playfieldLayer, image, x, y, 0, 0, 0, 0, 1);
@@ -389,7 +382,7 @@ public class Main extends Application {
             enemies.add(enemy);
             numOfEnemy = numOfEnemy + 1;
         }
-            // manage sprite
+        // manage sprite
     }
 
     /*public void spawnEnemy(int wave){
@@ -462,12 +455,15 @@ public class Main extends Application {
 
 
     private void updateScore() {
-        lifeText.setText( String.valueOf( life));
-        Money.setText(String.valueOf(money));
-        waveText.setText(String.valueOf(wave));
         long ltime = 0;
-        if (life >= 0) ltime = System.currentTimeMillis()/1000;
+        if (life >= 0){
+            lifeText.setText( String.valueOf( life));
+            Money.setText(String.valueOf(money));
+            waveText.setText(String.valueOf(wave));
+            ltime = System.currentTimeMillis()/1000;
+        }
         if(life <= 0){
+            lifeText.setText( String.valueOf( 0));
             gameOver.setText("GAME OVER");
             if (System.currentTimeMillis()/1000 - ltime >= 3)Platform.exit();
         }
