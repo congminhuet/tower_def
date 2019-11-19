@@ -7,10 +7,10 @@ public class MachineGunTower extends Tower {
     //public Image mgimage = new Image(getClass().getResource("/sample/image/MGTower.png").toExternalForm());
     public MachineGunTower(Pane layer, Image image, double x, double y, double r, double dx, double dy, double dr, double health, double speed) {
         super(layer, image, x, y, r, dx, dy, dr, health, speed);
-        this.targetRange = 200;
-        this.setDamage(25);
+        this.targetRange = 150;
+        this.setDamage(21);
         this.cost = 10;
-        this.speed = 0.25;
+        this.speed = 0.1;
     }
 
     /*public MachineGunTower(Pane layer, double x, double y, double r, double dx, double dy, double dr, double health, double damage, double speed) {
