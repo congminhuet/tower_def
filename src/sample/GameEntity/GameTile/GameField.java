@@ -39,8 +39,8 @@ public class GameField {
         Map[6][5] = true;
     }
 
-    public void setMap(double x, double y){
-        Map[(int) y][(int) x] = false;
+    public void setMap(double x, double y, boolean flag){
+        Map[(int) y][(int) x] = flag;
     }
 
     public boolean getMap(double x, double y){
