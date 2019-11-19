@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_towerdefense" default="compile.module.towerdefense">
+  <dirname property="module.towerdefense.basedir" file="${ant.file.module_towerdefense}"/>
+  
+  <property name="module.jdk.home.towerdefense" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.towerdefense" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.towerdefense" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.towerdefense" value="-encoding UTF-8 -source 12 -target 12 ${compiler.args}"/>
+  
+  <property name="towerdefense.output.dir" value="${module.towerdefense.basedir}/out/production/TowerDefense"/>
+  <property name="towerdefense.testoutput.dir" value="${module.towerdefense.basedir}/out/test/TowerDefense"/>
+  
+  <path id="towerdefense.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="towerdefense.module.production.classpath">
+    <path refid="${module.jdk.classpath.towerdefense}"/>
+    <path refid="library.application_data.classpath"/>
+    <path refid="library.lib.classpath"/>
+  </path>
+  
+  <path id="towerdefense.runtime.production.module.classpath">
+    <pathelement location="${towerdefense.output.dir}"/>
+    <path refid="library.application_data.classpath"/>
+    <path refid="library.lib.classpath"/>
+  </path>
+  
+  <path id="towerdefense.module.classpath">
+    <path refid="${module.jdk.classpath.towerdefense}"/>
+    <pathelement location="${towerdefense.output.dir}"/>
+    <path refid="library.application_data.classpath"/>
+    <path refid="library.lib.classpath"/>
+  </path>
+  
+  <path id="towerdefense.runtime.module.classpath">
+    <pathelement location="${towerdefense.testoutput.dir}"/>
+    <pathelement location="${towerdefense.output.dir}"/>
+    <path refid="library.application_data.classpath"/>
+    <path refid="library.lib.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.towerdefense">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.towerdefense">
+    <patternset refid="excluded.from.module.towerdefense"/>
+  </patternset>
+  
+  <path id="towerdefense.module.sourcepath">
+    <dirset dir="${module.towerdefense.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.towerdefense" depends="compile.module.towerdefense.production,compile.module.towerdefense.tests" description="Compile module TowerDefense"/>
+  
+  <target name="compile.module.towerdefense.production" depends="register.custom.compilers" description="Compile module TowerDefense; production classes">
+    <mkdir dir="${towerdefense.output.dir}"/>
+    <javac2 destdir="${towerdefense.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.towerdefense}/javac">
+      <compilerarg line="${compiler.args.towerdefense}"/>
+      <bootclasspath refid="towerdefense.module.bootclasspath"/>
+      <classpath refid="towerdefense.module.production.classpath"/>
+      <src refid="towerdefense.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.towerdefense"/>
+    </javac2>
+    
+    <copy todir="${towerdefense.output.dir}">
+      <fileset dir="${module.towerdefense.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.towerdefense.tests" depends="register.custom.compilers,compile.module.towerdefense.production" description="compile module TowerDefense; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.towerdefense" description="cleanup module">
+    <delete dir="${towerdefense.output.dir}"/>
+    <delete dir="${towerdefense.testoutput.dir}"/>
+  </target>
+</project>
