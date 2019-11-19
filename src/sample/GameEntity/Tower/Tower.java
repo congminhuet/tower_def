@@ -26,7 +26,7 @@ public class Tower extends SpriteBase {
     double damage = 20;
     public double speed = 1;
 
-    double targetRange = 300; // distance within tower can lock to enemy
+    double targetRange = 200; // distance within tower can lock to enemy
 
     ColorAdjust colorAdjust;
 
@@ -230,15 +230,15 @@ public class Tower extends SpriteBase {
 
     public void shootEnemy(SpriteBase target){
             Bullet bullet = new Bullet(layer, bulletImage, x, y, 0, 0, 0, 0, Settings.PLAYER_SHIP_HEALTH, Settings.PLAYER_SHIP_SPEED, false);
-            double tx = getImageView().getX();
-            double ty = getImageView().getY();
+            double tx = getImageView().getX() + 25;
+            double ty = getImageView().getY() +25;
             MoveTo spawn = new MoveTo(tx , ty);
             double ex = target.getCenterX();
             double ey = target.getCenterY();
             Path path = new Path();
             LineTo line1 = new LineTo(ex - (int) getCenterX()/100* 100, ey - (int) getCenterY()/100*100 );
             path.getElements().addAll(spawn, line1);
-            PathTransition pt = new PathTransition(Duration.millis(100), path, bullet.getImageView());
+            PathTransition pt = new PathTransition(Duration.millis(150), path, bullet.getImageView());
             pt.statusProperty().addListener(new ChangeListener<Status>() {
                     @Override
                     public void changed(ObservableValue<? extends Status>
